@@ -172,6 +172,104 @@ void display(void){
 
 
 
+ /* Dessine la COLLONE 1 en mvt */
+	glPushMatrix();
+	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glColor3f(0.25f, 0.4f, 0.34f);
+
+	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
+	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+
+	glBegin(GL_QUADS);
+
+	//Front
+	glVertex3f(-1.0f, -1.75f, 1.5f); //a
+	glVertex3f(-2.0f, -1.25f, 1.5f); //b
+	glVertex3f(1.75f, 3.5f, 1.5f); //c
+	glVertex3f(2.75f, 3.5f, 1.5f); //d
+
+	//Right
+	glVertex3f(2.75f, 3.5f, 1.5f); //d
+	glVertex3f(-2.0f, -1.25f, 1.0f); //f
+	glVertex3f(1.75f, 3.5f, 1.0f); //g
+	glVertex3f(1.75f, 3.5f, 1.5f); //c
+
+	//Back
+	glVertex3f(-1.0f, -1.75f, 1.0f); //e
+	glVertex3f(-2.0f, -1.25f, 1.0f); //f
+	glVertex3f(1.75f, 3.5f, 1.0f); //g
+	glVertex3f(2.75f, 3.5f, 1.0f); //h
+
+	//Left
+	glVertex3f(-1.0f, -1.75f, 1.5f); //a
+	glVertex3f(-1.0f, -1.75f, 1.0f); //e
+	glVertex3f(2.75f, 3.5f, 1.0f); //h
+	glVertex3f(2.75f, 3.5f, 1.5f); //d
+
+	//top
+	glVertex3f(1.75f, 3.5f, 1.5f); //c
+	glVertex3f(2.75f, 3.5f, 1.5f); //d
+	glVertex3f(2.75f, 3.5f, 1.0f); //h
+	glVertex3f(1.75f, 3.5f, 1.0f); //g
+
+	//bottom
+	glVertex3f(-1.0f, -1.75f, 1.5f); //a
+	glVertex3f(-2.0f, -1.25f, 1.5f); //b
+	glVertex3f(-2.0f, -1.25f, 1.0f); //f
+	glVertex3f(-1.0f, -1.75f, 1.0f); //e
+
+	glEnd();
+	glPopMatrix();
+
+ /* Dessine la COLLONE 2 en mvt */
+	glPushMatrix();
+	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glColor3f(0.25f, 0.4f, 0.34f);
+
+	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
+	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+
+	glBegin(GL_QUADS);
+
+	//Front
+	glVertex3f(-1.0f, -1.75f, -1.0f); //a
+	glVertex3f(-2.0f, -1.25f, -1.0f); //b
+	glVertex3f(1.75f, 3.5f, -1.0f); //c
+	glVertex3f(2.75f, 3.5f, -1.0f); //d
+
+	//Right
+	glVertex3f(2.75f, 3.5f, -1.0f); //d
+	glVertex3f(-2.0f, -1.25f, -1.5f); //f
+	glVertex3f(1.75f, 3.5f, -1.5f); //g
+	glVertex3f(1.75f, 3.5f, -1.0f); //c
+
+	//Back
+	glVertex3f(-1.0f, -1.75f, -1.5f); //e
+	glVertex3f(-2.0f, -1.25f, -1.5f); //f
+	glVertex3f(1.75f, 3.5f, -1.5f); //g
+	glVertex3f(2.75f, 3.5f, -1.5f); //h
+
+	//Left
+	glVertex3f(-1.0f, -1.75f, -1.0f); //a
+	glVertex3f(-1.0f, -1.75f, -1.5f); //e
+	glVertex3f(2.75f, 3.5f, -1.5f); //h
+	glVertex3f(2.75f, 3.5f, -1.0f); //d
+
+	//top
+	glVertex3f(1.75f, 3.5f, -1.0f); //c
+	glVertex3f(2.75f, 3.5f, -1.0f); //d
+	glVertex3f(2.75f, 3.5f, 1.0f); //h
+	glVertex3f(1.75f, 3.5f, 1.0f); //g
+
+	//bottom
+	glVertex3f(-1.0f, -1.75f, -1.0f); //a
+	glVertex3f(-2.0f, -1.25f, -1.0f); //b
+	glVertex3f(-2.0f, -1.25f, -1.5f); //f
+	glVertex3f(-1.0f, -1.75f, -1.5f); //e
+
+	glEnd();
+	glPopMatrix();
+
     /* Dessine la TOUR en mvt */
 	glPushMatrix();
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
