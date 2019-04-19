@@ -39,6 +39,12 @@ void display(void);
 void reshape(int w,int h);
 void update(int value);
 void keyboard(unsigned char key, int x, int y);
+void createTank();
+void createBase();
+void createTour();
+void createPill1();
+void createPill2();
+
 
 
 /* Programme principal */
@@ -115,8 +121,98 @@ void display(void){
 	glTranslatef(0.0f, 0.0f, -5.0f);                      // d�placement cam�ra
 
 
+	createTank();
 
-    /* Dessine la BASE en mvt */
+	/* On force l'affichage */
+	glFlush();
+}
+
+
+/* Fonction de mise � jour: mouvements des objets*/
+void update(int value){
+	angle += 0.2;
+	if (angle > 360){
+		angle -= 360;
+	}
+
+
+
+	glutPostRedisplay();
+	glutTimerFunc(10,update, 0);
+
+
+}
+
+
+/*  Mise en forme de la sc�ne pour l'affichage */
+void reshape(int w, int h){
+	glViewport(0, 0,(GLsizei) w, (GLsizei) h);
+    glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluPerspective(60.0, (GLfloat) w / (GLfloat) h, 1.0,	200.0);
+
+
+
+}
+
+
+
+/* Fonction de gestion au clavier des activations des lumi�res */
+void keyboard(unsigned char key, int x, int y) {
+		switch (key){
+
+			case 'a':   /* activation lumi�re n�0 */
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
+				glDisable(GL_LIGHT1);
+				glDisable(GL_LIGHT2);
+				glutPostRedisplay();
+				break;
+
+			case 'b':   /* activation lumi�re n�1*/
+				glEnable(GL_LIGHTING);
+				glDisable(GL_LIGHT0);
+				glEnable(GL_LIGHT1);
+				glutPostRedisplay();
+				break;
+
+			case 'c': //active l2
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT2);
+				glDisable(GL_LIGHT0);
+				glDisable(GL_LIGHT1);
+				glutPostRedisplay();
+				break;
+
+			case 'l':   /* activation des lumi�res  */
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
+				glEnable(GL_LIGHT1);
+				glutPostRedisplay();
+				break;
+
+			case 'L':   /* d�sactivation des lumi�res  */
+				glDisable(GL_LIGHTING);
+				glutPostRedisplay();
+				break;
+
+			case 'q':   /* Quitter le programme */
+				exit(0);
+		}
+}
+
+void createTank()
+{
+	createBase();
+	createTour();
+	createPill1();
+	createPill2();
+}
+
+void createBase()
+{
+	/* Dessine la BASE en mvt */
 	glPushMatrix();
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glColor3f(0.25f, 0.4f, 0.34f);
@@ -168,109 +264,11 @@ void display(void){
 
 	glEnd();
 	glPopMatrix();
+}
 
-
-
-
- /* Dessine la COLLONE 1 en mvt */
-	glPushMatrix();
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
-	glColor3f(0.25f, 0.4f, 0.34f);
-
-	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
-	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-
-	glBegin(GL_QUADS);
-
-	//Front
-	glVertex3f(-1.0f, -1.75f, 1.5f); //a
-	glVertex3f(-2.0f, -1.25f, 1.5f); //b
-	glVertex3f(1.75f, 3.5f, 1.5f); //c
-	glVertex3f(2.75f, 3.5f, 1.5f); //d
-
-	//Right
-	glVertex3f(2.75f, 3.5f, 1.5f); //d
-	glVertex3f(-2.0f, -1.25f, 1.0f); //f
-	glVertex3f(1.75f, 3.5f, 1.0f); //g
-	glVertex3f(1.75f, 3.5f, 1.5f); //c
-
-	//Back
-	glVertex3f(-1.0f, -1.75f, 1.0f); //e
-	glVertex3f(-2.0f, -1.25f, 1.0f); //f
-	glVertex3f(1.75f, 3.5f, 1.0f); //g
-	glVertex3f(2.75f, 3.5f, 1.0f); //h
-
-	//Left
-	glVertex3f(-1.0f, -1.75f, 1.5f); //a
-	glVertex3f(-1.0f, -1.75f, 1.0f); //e
-	glVertex3f(2.75f, 3.5f, 1.0f); //h
-	glVertex3f(2.75f, 3.5f, 1.5f); //d
-
-	//top
-	glVertex3f(1.75f, 3.5f, 1.5f); //c
-	glVertex3f(2.75f, 3.5f, 1.5f); //d
-	glVertex3f(2.75f, 3.5f, 1.0f); //h
-	glVertex3f(1.75f, 3.5f, 1.0f); //g
-
-	//bottom
-	glVertex3f(-1.0f, -1.75f, 1.5f); //a
-	glVertex3f(-2.0f, -1.25f, 1.5f); //b
-	glVertex3f(-2.0f, -1.25f, 1.0f); //f
-	glVertex3f(-1.0f, -1.75f, 1.0f); //e
-
-	glEnd();
-	glPopMatrix();
-
- /* Dessine la COLLONE 2 en mvt */
-	glPushMatrix();
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
-	glColor3f(0.25f, 0.4f, 0.34f);
-
-	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
-	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-
-	glBegin(GL_QUADS);
-
-	//Front
-	glVertex3f(-1.0f, -1.75f, -1.0f); //a
-	glVertex3f(-2.0f, -1.25f, -1.0f); //b
-	glVertex3f(1.75f, 3.5f, -1.0f); //c
-	glVertex3f(2.75f, 3.5f, -1.0f); //d
-
-	//Right
-	glVertex3f(2.75f, 3.5f, -1.0f); //d
-	glVertex3f(-2.0f, -1.25f, -1.5f); //f
-	glVertex3f(1.75f, 3.5f, -1.5f); //g
-	glVertex3f(1.75f, 3.5f, -1.0f); //c
-
-	//Back
-	glVertex3f(-1.0f, -1.75f, -1.5f); //e
-	glVertex3f(-2.0f, -1.25f, -1.5f); //f
-	glVertex3f(1.75f, 3.5f, -1.5f); //g
-	glVertex3f(2.75f, 3.5f, -1.5f); //h
-
-	//Left
-	glVertex3f(-1.0f, -1.75f, -1.0f); //a
-	glVertex3f(-1.0f, -1.75f, -1.5f); //e
-	glVertex3f(2.75f, 3.5f, -1.5f); //h
-	glVertex3f(2.75f, 3.5f, -1.0f); //d
-
-	//top
-	glVertex3f(1.75f, 3.5f, -1.0f); //c
-	glVertex3f(2.75f, 3.5f, -1.0f); //d
-	glVertex3f(2.75f, 3.5f, 1.0f); //h
-	glVertex3f(1.75f, 3.5f, 1.0f); //g
-
-	//bottom
-	glVertex3f(-1.0f, -1.75f, -1.0f); //a
-	glVertex3f(-2.0f, -1.25f, -1.0f); //b
-	glVertex3f(-2.0f, -1.25f, -1.5f); //f
-	glVertex3f(-1.0f, -1.75f, -1.5f); //e
-
-	glEnd();
-	glPopMatrix();
-
-    /* Dessine la TOUR en mvt */
+void createTour()
+{
+	/* Dessine la TOUR en mvt */
 	glPushMatrix();
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glColor3f(0.25f, 0.4f, 0.34f);
@@ -367,82 +365,112 @@ void display(void){
 	glEnd();
 	glPopMatrix();
 	glutSwapBuffers();
-
-	/* On force l'affichage */
-	glFlush();
 }
 
+void createPill1()
+{
+	 /* Dessine la COLLONE 1 en mvt */
+	glPushMatrix();
+	// glTranslatef(-1.5f, -1.5f, 1.5f);
+	// glRotatef(angle, 1.0f, 0.0f, 0.0f);
+	// glTranslatef(1.0f, 1.75f, -1.5f);
+	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glColor3f(0.25f, 0.4f, 0.34f);
 
-/* Fonction de mise � jour: mouvements des objets*/
-void update(int value){
-	angle += 0.2;
-	if (angle > 360){
-		angle -= 360;
-	}
+	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
+	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
+	glBegin(GL_QUADS);
 
+	//Front
+	glVertex3f(-1.0f, -1.75f, 1.5f); //a
+	glVertex3f(-2.0f, -1.25f, 1.5f); //b
+	glVertex3f(1.75f, 3.5f, 1.5f); //c
+	glVertex3f(2.75f, 3.5f, 1.5f); //d
 
-	glutPostRedisplay();
-	glutTimerFunc(10,update, 0);
+	//Right
+	glVertex3f(2.75f, 3.5f, 1.5f); //d
+	glVertex3f(-2.0f, -1.25f, 1.0f); //f
+	glVertex3f(1.75f, 3.5f, 1.0f); //g
+	glVertex3f(1.75f, 3.5f, 1.5f); //c
 
+	//Back
+	glVertex3f(-1.0f, -1.75f, 1.0f); //e
+	glVertex3f(-2.0f, -1.25f, 1.0f); //f
+	glVertex3f(1.75f, 3.5f, 1.0f); //g
+	glVertex3f(2.75f, 3.5f, 1.0f); //h
 
+	//Left
+	glVertex3f(-1.0f, -1.75f, 1.5f); //a
+	glVertex3f(-1.0f, -1.75f, 1.0f); //e
+	glVertex3f(2.75f, 3.5f, 1.0f); //h
+	glVertex3f(2.75f, 3.5f, 1.5f); //d
+
+	//top
+	glVertex3f(1.75f, 3.5f, 1.5f); //c
+	glVertex3f(2.75f, 3.5f, 1.5f); //d
+	glVertex3f(2.75f, 3.5f, 1.0f); //h
+	glVertex3f(1.75f, 3.5f, 1.0f); //g
+
+	//bottom
+	glVertex3f(-1.0f, -1.75f, 1.5f); //a
+	glVertex3f(-2.0f, -1.25f, 1.5f); //b
+	glVertex3f(-2.0f, -1.25f, 1.0f); //f
+	glVertex3f(-1.0f, -1.75f, 1.0f); //e
+
+	glEnd();
+	glPopMatrix();
 }
 
+void createPill2()
+{
+	 /* Dessine la COLLONE 2 en mvt */
+	glPushMatrix();
+	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glColor3f(0.25f, 0.4f, 0.34f);
 
-/*  Mise en forme de la sc�ne pour l'affichage */
-void reshape(int w, int h){
-	glViewport(0, 0,(GLsizei) w, (GLsizei) h);
-    glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
+	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
-	gluPerspective(60.0, (GLfloat) w / (GLfloat) h, 1.0,	200.0);
+	glBegin(GL_QUADS);
 
+	//Front
+	glVertex3f(-1.0f, -1.75f, -1.0f); //a
+	glVertex3f(-2.0f, -1.25f, -1.0f); //b
+	glVertex3f(1.75f, 3.5f, -1.0f); //c
+	glVertex3f(2.75f, 3.5f, -1.0f); //d
 
+	//Right
+	glVertex3f(2.75f, 3.5f, -1.0f); //d
+	glVertex3f(-2.0f, -1.25f, -1.5f); //f
+	glVertex3f(1.75f, 3.5f, -1.5f); //g
+	glVertex3f(1.75f, 3.5f, -1.0f); //c
 
-}
+	//Back
+	glVertex3f(-1.0f, -1.75f, -1.5f); //e
+	glVertex3f(-2.0f, -1.25f, -1.5f); //f
+	glVertex3f(1.75f, 3.5f, -1.5f); //g
+	glVertex3f(2.75f, 3.5f, -1.5f); //h
 
+	//Left
+	glVertex3f(-1.0f, -1.75f, -1.0f); //a
+	glVertex3f(-1.0f, -1.75f, -1.5f); //e
+	glVertex3f(2.75f, 3.5f, -1.5f); //h
+	glVertex3f(2.75f, 3.5f, -1.0f); //d
 
+	//top
+	glVertex3f(1.75f, 3.5f, -1.0f); //c
+	glVertex3f(2.75f, 3.5f, -1.0f); //d
+	glVertex3f(2.75f, 3.5f, 1.0f); //h
+	glVertex3f(1.75f, 3.5f, 1.0f); //g
 
-/* Fonction de gestion au clavier des activations des lumi�res */
-void keyboard(unsigned char key, int x, int y) {
-		switch (key){
+	//bottom
+	glVertex3f(-1.0f, -1.75f, -1.0f); //a
+	glVertex3f(-2.0f, -1.25f, -1.0f); //b
+	glVertex3f(-2.0f, -1.25f, -1.5f); //f
+	glVertex3f(-1.0f, -1.75f, -1.5f); //e
 
-			case 'a':   /* activation lumi�re n�0 */
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-				glDisable(GL_LIGHT1);
-				glDisable(GL_LIGHT2);
-				glutPostRedisplay();
-				break;
+	glEnd();
+	glPopMatrix();
 
-			case 'b':   /* activation lumi�re n�1*/
-				glEnable(GL_LIGHTING);
-				glDisable(GL_LIGHT0);
-				glEnable(GL_LIGHT1);
-				glutPostRedisplay();
-				break;
-
-			case 'c': //active l2
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT2);
-				glDisable(GL_LIGHT0);
-				glDisable(GL_LIGHT1);
-				glutPostRedisplay();
-				break;
-
-			case 'l':   /* activation des lumi�res  */
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-				glEnable(GL_LIGHT1);
-				glutPostRedisplay();
-				break;
-
-			case 'L':   /* d�sactivation des lumi�res  */
-				glDisable(GL_LIGHTING);
-				glutPostRedisplay();
-				break;
-
-			case 'q':   /* Quitter le programme */
-				exit(0);
-		}
 }
