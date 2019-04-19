@@ -119,7 +119,7 @@ void display(void){
     /* Dessine la BASE en mvt */
 	glPushMatrix();
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(0.25f, 0.4f, 0.34f);
 
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
 	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
@@ -142,6 +142,7 @@ void display(void){
 	glVertex3f(-4.0f, 0.0f, -2.0f); //g
 	glVertex3f(4.0f, -0.5f, -2.0f); //e
 	glVertex3f(4.0f, -2.0f, -2.0f); //f
+
 	glVertex3f(-2.0f, -2.0f, -2.0f); //h
 
 	//Left
@@ -174,7 +175,7 @@ void display(void){
     /* Dessine la TOUR en mvt */
 	glPushMatrix();
 	glRotatef(angle, 0.0f, 1.0f, 0.0f);
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(0.25f, 0.4f, 0.34f);
 
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
 	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
