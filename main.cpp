@@ -30,8 +30,11 @@
 
 
 
-float angle = 0.0;
-
+float angle = 0.09;
+float tourUp = 0.0;
+float aim = 0.0;
+int i, nbB = 42;
+float fire[42] = {0.0};
 
 /* prototypes de fonctions */
 void initRendering();
@@ -44,6 +47,9 @@ void createBase();
 void createTour();
 void createPill1();
 void createPill2();
+void createCannon();
+void createWheels();
+void fireBullet(int i);
 
 
 
@@ -162,39 +168,39 @@ void reshape(int w, int h){
 void keyboard(unsigned char key, int x, int y) {
 		switch (key){
 
-			case 'a':   /* activation lumi�re n�0 */
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-				glDisable(GL_LIGHT1);
-				glDisable(GL_LIGHT2);
+			case 'd':   /* activation lumi�re n�0 */
+				tourUp -= 0.5;
+				if (tourUp < -38.0){tourUp += 0.5;}
 				glutPostRedisplay();
 				break;
 
-			case 'b':   /* activation lumi�re n�1*/
-				glEnable(GL_LIGHTING);
-				glDisable(GL_LIGHT0);
-				glEnable(GL_LIGHT1);
+			case 'a':   /* activation lumi�re n�1*/
+				tourUp += 0.5;
+				if (tourUp > 12.0){tourUp -= 0.5;}
 				glutPostRedisplay();
 				break;
 
-			case 'c': //active l2
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT2);
-				glDisable(GL_LIGHT0);
-				glDisable(GL_LIGHT1);
+			case 'w': //active l2
+				aim -= 0.5;
+				if (aim > 360){aim -= 360;}
 				glutPostRedisplay();
 				break;
 
-			case 'l':   /* activation des lumi�res  */
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-				glEnable(GL_LIGHT1);
+			case 's':   /* activation des lumi�res  */
+				aim += 0.5;
+				if (aim > 360){aim -= 360;}
 				glutPostRedisplay();
 				break;
 
 			case 'L':   /* d�sactivation des lumi�res  */
 				glDisable(GL_LIGHTING);
 				glutPostRedisplay();
+				break;
+
+			case 'f': //fire
+				i = 0;
+				while(i < nbB && fire[i] != 0.0){i++;}
+				if (i < nbB){fire[i] = 1.0;}
 				break;
 
 			case 'q':   /* Quitter le programme */
@@ -204,17 +210,20 @@ void keyboard(unsigned char key, int x, int y) {
 
 void createTank()
 {
+	glPushMatrix();
+	glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	createBase();
-	createTour();
 	createPill1();
 	createPill2();
+	// createWheels();
+	glPopMatrix();
 }
 
 void createBase()
 {
 	/* Dessine la BASE en mvt */
 	glPushMatrix();
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	// glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glColor3f(0.25f, 0.4f, 0.34f);
 
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
@@ -266,11 +275,34 @@ void createBase()
 	glPopMatrix();
 }
 
+// void createWheels()
+// {
+
+// 	glPushMatrix();
+// 	glColor3f(1.0f, 1.0f, 1.0f);
+// 	GLUquadricObj *quadratic;
+// 	GLUquadricObj *circle;
+// 	quadratic = gluNewQuadric();
+// 	circle = gluNewQuadric();
+// 	glTranslatef(0.0f, 0.0f, -2.5f);
+// 	gluCylinder(quadratic, 0.15, 0.15, 5, 50, 50);
+// 	gluDisk(circle, 0.0, 0.15, 50, 50);
+// 	glTranslatef(0.0f, 0.0f, 5.0f);
+// 	gluDisk(circle, 0.0, 0.15, 50, 50);
+// 	//return back
+// 	glTranslatef(0.0f, 0.0f, -2.5f);
+// 	glPopMatrix();
+// }
+
 void createTour()
 {
 	/* Dessine la TOUR en mvt */
 	glPushMatrix();
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glTranslatef(2.5f, 3.5f, 0.0f);
+	glRotatef(-tourUp, 0.0f, 0.0f, 1.0f); //align tour when pillars are moving
+	glRotatef(aim, 0.0f, 0.0f, 1.0f);
+	glTranslatef(-2.5f, -3.5f, 0.0f);
+	// glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glColor3f(0.25f, 0.4f, 0.34f);
 
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
@@ -363,22 +395,80 @@ void createTour()
 	glVertex3f(2.75f, 3.0f, 1.0f); //e
 
 	glEnd();
+	createCannon();
 	glPopMatrix();
 	glutSwapBuffers();
+}
+
+void fireBullet(int in)
+{
+	glPushMatrix();
+	GLUquadricObj *quadratic;
+	quadratic = gluNewQuadric();
+//head	
+	//direction of cone
+	glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
+	glTranslatef(fire[in], 0.0f, 0.0f);
+	glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+	//creation
+	gluCylinder(quadratic, 0.0, 0.25, 0.5, 50, 50);
+//body
+	//direction of cilynder
+	glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
+	glTranslatef(0.5f, 0.0f, 0.0f);
+	glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+	//creation
+	gluCylinder(quadratic, 0.25, 0.25, 0.5, 50, 50);
+//place back camera body
+	glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
+	glTranslatef(-0.5f, 0.0f, 0.0f);
+	glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+	//place back camera head
+	glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
+	glTranslatef(-fire[in], 0.0f, 0.0f);
+	glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+	//increment
+	fire[in] -= 0.01;
+}
+
+void createCannon()
+{
+	int j = 0;
+	glPushMatrix();
+	GLUquadricObj *quadratic;
+	quadratic = gluNewQuadric();
+	glTranslatef(-3.75f, 3.25f, 0.0f);
+	glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+	gluCylinder(quadratic, 0.25, 0.25, 4, 50, 50);
+
+	while(j < nbB)
+	{
+		if(fire[j] != 0.0 && fire[j] <= 10.0)
+			fireBullet(j);
+		j++;
+	}
+	glPopMatrix();
+
+	//return back
+	glTranslatef(4.0f, -3.25f, -1.0f);
+	glRotatef(-90.0f, 0.0f, -1.0f, 0.0f);
 }
 
 void createPill1()
 {
 	 /* Dessine la COLLONE 1 en mvt */
 	glPushMatrix();
-	// glTranslatef(-1.5f, -1.5f, 1.5f);
-	// glRotatef(angle, 1.0f, 0.0f, 0.0f);
-	// glTranslatef(1.0f, 1.75f, -1.5f);
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glTranslatef(-1.5f, -1.5f, 1.25f);
+	glRotatef(tourUp, 0.0f, 0.0f, 1.0f);
+	glTranslatef(1.5f, 1.5f, -1.25f);
+	// glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glColor3f(0.25f, 0.4f, 0.34f);
 
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
 	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+
+	createTour();
+
 
 	glBegin(GL_QUADS);
 
@@ -386,10 +476,10 @@ void createPill1()
 	glVertex3f(-1.0f, -1.75f, 1.5f); //a
 	glVertex3f(-2.0f, -1.25f, 1.5f); //b
 	glVertex3f(1.75f, 3.5f, 1.5f); //c
-	glVertex3f(2.75f, 3.5f, 1.5f); //d
+	glVertex3f(2.75f, 3.0f, 1.5f); //d
 
 	//Right
-	glVertex3f(2.75f, 3.5f, 1.5f); //d
+	glVertex3f(2.75f, 3.0f, 1.5f); //d
 	glVertex3f(-2.0f, -1.25f, 1.0f); //f
 	glVertex3f(1.75f, 3.5f, 1.0f); //g
 	glVertex3f(1.75f, 3.5f, 1.5f); //c
@@ -404,11 +494,11 @@ void createPill1()
 	glVertex3f(-1.0f, -1.75f, 1.5f); //a
 	glVertex3f(-1.0f, -1.75f, 1.0f); //e
 	glVertex3f(2.75f, 3.5f, 1.0f); //h
-	glVertex3f(2.75f, 3.5f, 1.5f); //d
+	glVertex3f(2.75f, 3.0f, 1.5f); //d
 
 	//top
 	glVertex3f(1.75f, 3.5f, 1.5f); //c
-	glVertex3f(2.75f, 3.5f, 1.5f); //d
+	glVertex3f(2.75f, 3.0f, 1.5f); //d
 	glVertex3f(2.75f, 3.5f, 1.0f); //h
 	glVertex3f(1.75f, 3.5f, 1.0f); //g
 
@@ -426,7 +516,10 @@ void createPill2()
 {
 	 /* Dessine la COLLONE 2 en mvt */
 	glPushMatrix();
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glTranslatef(-1.5f, -1.5f, -1.25f);
+	glRotatef(tourUp, 0.0f, 0.0f, 1.0f);
+	glTranslatef(1.5f, 1.5f, 1.25f);
+	// glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glColor3f(0.25f, 0.4f, 0.34f);
 
 	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
@@ -438,10 +531,10 @@ void createPill2()
 	glVertex3f(-1.0f, -1.75f, -1.0f); //a
 	glVertex3f(-2.0f, -1.25f, -1.0f); //b
 	glVertex3f(1.75f, 3.5f, -1.0f); //c
-	glVertex3f(2.75f, 3.5f, -1.0f); //d
+	glVertex3f(2.75f, 3.0f, -1.0f); //d
 
 	//Right
-	glVertex3f(2.75f, 3.5f, -1.0f); //d
+	glVertex3f(2.75f, 3.0f, -1.0f); //d
 	glVertex3f(-2.0f, -1.25f, -1.5f); //f
 	glVertex3f(1.75f, 3.5f, -1.5f); //g
 	glVertex3f(1.75f, 3.5f, -1.0f); //c
@@ -460,7 +553,7 @@ void createPill2()
 
 	//top
 	glVertex3f(1.75f, 3.5f, -1.0f); //c
-	glVertex3f(2.75f, 3.5f, -1.0f); //d
+	glVertex3f(2.75f, 3.0f, -1.0f); //d
 	glVertex3f(2.75f, 3.5f, 1.0f); //h
 	glVertex3f(1.75f, 3.5f, 1.0f); //g
 
