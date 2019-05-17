@@ -33,6 +33,8 @@
 float angle = 0.09;
 float tourUp = 0.0;
 float aim = 0.0;
+float avance = 0.0;
+float turn = 0.0;
 int i, nbB = 42;
 float fire[42] = {0.0};
 
@@ -192,10 +194,31 @@ void keyboard(unsigned char key, int x, int y) {
 				glutPostRedisplay();
 				break;
 
-			case 'L':   /* d�sactivation des lumi�res  */
-				glDisable(GL_LIGHTING);
+			// move tank
+			case 'i':   //front
+				avance += 0.1;
 				glutPostRedisplay();
 				break;
+
+			case 'k':   //back
+				avance -= 0.1;
+				glutPostRedisplay();
+				break;
+
+			case 'j':   //left
+				turn += 0.5;
+				if (turn > 360){turn -= 360;}
+				glutPostRedisplay();
+				break;
+
+			case 'l':   //right
+				turn -= 0.5;
+				if (turn > 360){turn -= 360;}
+				glutPostRedisplay();
+				break;
+
+
+
 
 			case 'f': //fire
 				i = 0;
@@ -211,7 +234,8 @@ void keyboard(unsigned char key, int x, int y) {
 void createTank()
 {
 	glPushMatrix();
-	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	glTranslatef(-avance, 0.0f, 0.0f);
+	glRotatef(turn, 0.0f, 1.0f, 0.0f);
 	createBase();
 	createPill1();
 	createPill2();
@@ -225,9 +249,6 @@ void createBase()
 	glPushMatrix();
 	// glRotatef(angle, 0.0f, 1.0f, 0.0f);
 	glColor3f(0.25f, 0.4f, 0.34f);
-
-	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient_color);
-	//glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
 	glBegin(GL_QUADS);
 
@@ -405,7 +426,7 @@ void fireBullet(int in)
 	glPushMatrix();
 	GLUquadricObj *quadratic;
 	quadratic = gluNewQuadric();
-//head	
+//head
 	//direction of cone
 	glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
 	glTranslatef(fire[in], 0.0f, 0.0f);
@@ -428,7 +449,8 @@ void fireBullet(int in)
 	glTranslatef(-fire[in], 0.0f, 0.0f);
 	glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
 	//increment
-	fire[in] -= 0.01;
+	fire[in] -= 0.1;
+	if(fire[in] <= -20){fire[in] = 0;}
 }
 
 void createCannon()
